@@ -29,7 +29,7 @@ class SqliteStateResetWrapper(gym.Wrapper):
                     """,
                     (self.env.unwrapped.env_id, b"", 0, os.getpid()),
                 )
-        print(f"Initialized sqlite row {self.env.unwrapped.env_id}")
+        #print(f"Initialized sqlite row {self.env.unwrapped.env_id}")
 
     def reset(self, seed: int | None = None, options: dict[str, Any] | None = None):
         with SqliteStateResetWrapper.DB_LOCK:
