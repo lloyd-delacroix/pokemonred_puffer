@@ -103,7 +103,11 @@ def setup_agent(
         for wrapper_dicts in wrappers
         for k in wrapper_dicts.keys()
     ]
-    reward_module, reward_class_name = reward_name.split(".")
+    if "." in reward_name:
+        reward_module, reward_class_name = reward_name.split(".")
+    else:
+        reward_module = "baseline"
+        reward_class_name = "BaselineRewardEnv"
     reward_class = getattr(
         importlib.import_module(f"pokemonred_puffer.rewards.{reward_module}"), reward_class_name
     )
@@ -195,7 +199,7 @@ def evaluate(
             "-r",
             help="Reward module to use in rewards",
         ),
-    ] = "baseline.BaselineRewardEnv",
+    ] = "baseline",
     wrappers_name: Annotated[
         str,
         typer.Option(
@@ -251,7 +255,7 @@ def autotune(
             "-r",
             help="Reward module to use in rewards",
         ),
-    ] = "baseline.BaselineRewardEnv",
+    ] = "baseline",
     wrappers_name: Annotated[
         str,
         typer.Option(
@@ -301,7 +305,7 @@ def train(
             "-r",
             help="Reward module to use in rewards",
         ),
-    ] = "baseline.ObjectRewardRequiredEventsMapIds",
+    ] = "baseline",
     wrappers_name: Annotated[
         str,
         typer.Option(
