@@ -4,6 +4,7 @@ from omegaconf import DictConfig, OmegaConf
 from pokemonred_puffer.data.events import EVENTS, REQUIRED_EVENTS
 from pokemonred_puffer.data.items import REQUIRED_ITEMS, USEFUL_ITEMS
 from pokemonred_puffer.data.tilesets import Tilesets
+from pokemonred_puffer.data.species import StarterSpecies
 from pokemonred_puffer.environment import RedGymEnv
 
 
@@ -15,6 +16,7 @@ class BaselineRewardEnv(RedGymEnv):
         super().__init__(env_config)
         self.reward_config = OmegaConf.to_object(reward_config)
         self.max_event_rew = 0
+        self.starter_species = set(species.value for species in StarterSpecies)
 
     # TODO: make the reward weights configurable
     def get_game_state_reward(self):
@@ -33,6 +35,9 @@ class BaselineRewardEnv(RedGymEnv):
                 "moves_obtained": self.reward_weight("moves_obtained") * np.sum(self.moves_obtained),
                 "hm_count": self.reward_weight("hm_count") * self.get_hm_count(),
                 "max_party_level": self.reward_weight("max_party_level") * self.get_levels_reward(),
+                "max_starter_level": self.reward_weight("max_starter_level") * self.get_starter_level_reward(),
+                "first_poke_level": self.reward_weight("first_poke_level") * self.get_single_level_reward(1),
+                "second_poke_level": self.reward_weight("second_poke_level") * self.get_single_level_reward(2),
                 "max_opponent_level": self.reward_weight("max_opponent_level") * self.max_opponent_level,
                 "death_reward": self.reward_weight("death_reward") * self.died_count,
                 "blackout_check": self.reward_weight("blackout_check") * self.blackout_check,
@@ -99,3 +104,19 @@ class BaselineRewardEnv(RedGymEnv):
             return self.max_level_sum
         else:
             return 15 + (self.max_level_sum - 15) / 4
+    
+    def get_single_level_reward(self, position):
+        party_size = self.read_m("wPartyCount")
+        if position > party_size:
+            return 0
+        else:
+            return self.read_m(f"wPartyMon{position}Level") ** .66
+        
+    def get_starter_level_reward(self):
+        party_size = self.read_m("wPartyCount")
+        for i in range(party_size):
+            if self.read_m(f"wPartyMon{i+1}Species") in self.starter_species:
+                self.max_starter_level = max(self.max_starter_level, self.read_m(f"wPartyMon{i+1}Level"))
+        return self.max_starter_level ** .66
+    
+

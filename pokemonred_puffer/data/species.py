@@ -192,3 +192,14 @@ class Species(Enum):
     BELLSPROUT = 0xBC
     WEEPINBELL = 0xBD
     VICTREEBEL = 0xBE
+
+class StarterSpecies(Enum):
+    IVYSAUR = 0x09
+    BLASTOISE = 0x1C
+    BULBASAUR = 0x99
+    VENUSAUR = 0x9A
+    CHARMANDER = 0xB0
+    SQUIRTLE = 0xB1
+    CHARMELEON = 0xB2
+    WARTORTLE = 0xB3
+    CHARIZARD = 0xB4

@@ -380,6 +380,7 @@ class RedGymEnv(Env):
         self.max_opponent_level = 0
         self.max_level_rew = 0
         self.max_level_sum = 0
+        self.max_starter_level = 0
         self.last_health = 1
         self.total_heal_health = 0
         self.died_count = 0

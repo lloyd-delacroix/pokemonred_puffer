@@ -49,7 +49,6 @@ env:
   headless: False
   head_ids: #Which environment IDs to display in pyboy (env_id starts at 1 when multithreaded)
     - 1
-    - 5
   disable_ai_actions: False
   save_final_state: True
   print_rewards: True
@@ -216,6 +215,9 @@ rewards:
       moves_obtained: 4.0 #TM/HM moves taught to party pokemon
       hm_count: 10.0
       max_party_level: 1.0 #Highest sum of party pokemon levels
+      max_starter_level: 0.0 #Highest level obtained with starter pokemon
+      first_poke_level: 0.0 #Level of first pokemon in party
+      second_poke_level: 0.0 #Level of second pokemon in party
       max_opponent_level: 0.0 #Highest enemy pokemon level encountered
       death_reward: 0.0
       blackout_check: 0.0
